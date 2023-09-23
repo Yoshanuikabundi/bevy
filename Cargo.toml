@@ -643,6 +643,17 @@ category = "3D Rendering"
 wasm = true
 
 [[example]]
+name = "custom_projection"
+path = "examples/3d/custom_projection.rs"
+doc-scrape-examples = true
+
+[package.metadata.example.custom_projection]
+name = "Custom Camera Projection"
+description = "Demonstrates creation of a custom camera projection"
+category = "3D Rendering"
+wasm = true
+
+[[example]]
 name = "parenting"
 path = "examples/3d/parenting.rs"
 doc-scrape-examples = true
