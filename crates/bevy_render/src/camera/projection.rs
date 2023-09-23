@@ -37,12 +37,20 @@ impl<T: CameraProjection + Component + GetTypeRegistration> Plugin for CameraPro
             )
             .add_systems(
                 PostUpdate,
-                crate::camera::camera_system::<T>
-                    .in_set(CameraUpdateSystem)
-                    // We assume that each camera will only have one projection,
-                    // so we can ignore ambiguities with all other monomorphizations.
-                    // FIXME: Add an archetype invariant for this https://github.com/bevyengine/bevy/issues/1481.
-                    .ambiguous_with(CameraUpdateSystem),
+                (
+                    crate::camera::camera_system::<T>
+                        .in_set(CameraUpdateSystem)
+                        // We assume that each camera will only have one projection,
+                        // so we can ignore ambiguities with all other monomorphizations.
+                        // FIXME: Add an archetype invariant for this https://github.com/bevyengine/bevy/issues/1481.
+                        .ambiguous_with(CameraUpdateSystem),
+                    crate::view::update_frusta::<T>
+                        .in_set(crate::view::VisibilitySystems::UpdateFrusta)
+                        .after(crate::camera::camera_system::<T>)
+                        .after(bevy_transform::TransformSystem::TransformPropagate)
+                        .ambiguous_with(crate::view::VisibilitySystems::UpdateFrusta)
+                        .before(crate::view::VisibilitySystems::CheckVisibility),
+                ),
             );
     }
 }
